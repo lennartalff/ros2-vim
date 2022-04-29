@@ -1,4 +1,14 @@
 services:
+  nvidia:
+    extends:
+      service: dev
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
   dev:
     network_mode: host
     build:
