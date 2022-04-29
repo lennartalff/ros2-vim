@@ -28,9 +28,11 @@ RUN apt-get update \
     byobu \
     xmlstarlet \
     clang-format \
-    && pip3 install yapf \
+    && python3 -m pip install yapf \
     rope \
     flake8 \
+    pylint \
+    jedi \
     && groupadd --gid $USER_GID $USERNAME \
     && useradd -s /bin/bash --uid $USER_UID --gid $USER_GID -m $USERNAME \
     && echo $USERNAME ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/$USERNAME\
@@ -47,20 +49,22 @@ RUN sh -c "$(wget -O- https://github.com/deluan/zsh-in-docker/releases/download/
     -a 'fpath+=$HOME/.zsh/pure' \
     -a 'autoload -U promptinit; promptinit' \
     -a 'prompt pure' \
+    -a 'PATH=$PATH:$HOME/.local/bin' \
     && mkdir -p "$HOME/.zsh" \
     && git clone https://github.com/sindresorhus/pure.git "$HOME/.zsh/pure" \
     && echo "source /opt/ros/$ROS_DISTR/setup.zsh" >> /home/$USERNAME/.zshrc
 
 ADD vimrc /home/$USERNAME/.vimrc
+ADD ycm_extra_conf.py /home/$USERNAME/.ycm_extra_conf.py
 RUN git clone https://github.com/VundleVim/Vundle.vim.git /home/$USERNAME/.vim/bundle/Vundle.vim
 RUN vim +PluginInstall +qall
 RUN cd /home/$USERNAME/.vim/bundle/YouCompleteMe \
-    && python3 install.py --clang-completer
+    && python3 install.py --clangd-completer
 USER root
 RUN chown -R $USERNAME /home/$USERNAME/
 USER ${USERNAME}
 WORKDIR /home/$USERNAME
-RUN wget https://raw.githubusercontent.com/llvm-mirror/clang/master/tools/clang-format/clang-format.py
+RUN wget https://raw.githubusercontent.com/llvm/llvm-project/main/clang/tools/clang-format/clang-format.py
 # Switch back to dialog for any ad-hoc use of apt-get
 ENV DEBIAN_FRONTEND=dialog
 CMD [ "/usr/bin/zsh"]
