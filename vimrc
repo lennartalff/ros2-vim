@@ -6,10 +6,15 @@ call vundle#begin()
 Plugin 'preservim/nerdtree'
 Plugin 'ycm-core/YouCompleteMe'
 Plugin 'NLKNguyen/papercolor-theme'
+Plugin 'dense-analysis/ale'
 
 call vundle#end()
 filetype plugin indent on
 syntax on
+set tabstop=4
+set softtabstop=4
+set shiftwidth=4
+set expandtab
 
 "disable soft wraps
 set nowrap
@@ -45,8 +50,8 @@ let g:ycm_confirm_extra_conf=0
 
 let mapleader=","
 
-autocmd FileType c,cpp nnoremap <leader><F> :py3f $HOME/clang-format.py<CR>
-autocmd FileType c,cpp vnoremap <leader><F> :py3f $HOME/clang-format.py<CR>
+autocmd FileType c,cpp nnoremap <leader>f :py3f $HOME/clang-format.py<CR>
+autocmd FileType c,cpp vnoremap <leader>f :py3f $HOME/clang-format.py<CR>
 " autocmd FileType python nnoremap <leader><F> :0,$!yapf<CR><C-o> 
 let g:ale_linters={"python": ["pylint"]}
 let g:ale_fixers = ["yapf"]
