@@ -16,10 +16,7 @@ services:
       dockerfile: ./Dockerfile
     stdin_open: true
     tty: true
-    entrypoint:
-      - bash
-      - entrypoint.sh
-    command: byobu
+    entrypoint: ["/entrypoint.sh", "byobu"]
     working_dir: /home/ros-user/uuv/ros2
     devices:
       - "/dev/dri:/dev/dri"

@@ -62,6 +62,9 @@ RUN cd /home/$USERNAME/.vim/bundle/YouCompleteMe \
     && python3 install.py --clangd-completer
 USER root
 RUN chown -R $USERNAME /home/$USERNAME/
+ADD entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+RUN chown $USERNAME /entrypoint.sh
 USER ${USERNAME}
 WORKDIR /home/$USERNAME
 RUN wget https://raw.githubusercontent.com/llvm/llvm-project/main/clang/tools/clang-format/clang-format.py
