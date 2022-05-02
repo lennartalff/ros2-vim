@@ -7,6 +7,7 @@ Plugin 'preservim/nerdtree'
 Plugin 'ycm-core/YouCompleteMe'
 Plugin 'NLKNguyen/papercolor-theme'
 Plugin 'dense-analysis/ale'
+Plugin 'tmsvg/pear-tree'
 
 call vundle#end()
 filetype plugin indent on
@@ -30,6 +31,7 @@ set ruler
 set visualbell
 set encoding=utf-8
 set ttyfast
+let mapleader=","
 
 " always show mode status line
 set laststatus=2
@@ -39,6 +41,8 @@ set showmode
 
 inoremap jj <ESC>
 
+noremap <leader>t :NERDTreeToggle<CR>
+
 set t_Co=256
 set background=dark
 silent! colorscheme PaperColor
@@ -47,8 +51,6 @@ silent! colorscheme PaperColor
 let g:clang_format_fallback_style="Google"
 let g:ycm_autoclose_preview_window_after_completion=1
 let g:ycm_confirm_extra_conf=0
-
-let mapleader=","
 
 autocmd FileType c,cpp nnoremap <leader>f :py3f $HOME/clang-format.py<CR>
 autocmd FileType c,cpp vnoremap <leader>f :py3f $HOME/clang-format.py<CR>
