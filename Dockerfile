@@ -50,6 +50,9 @@ RUN sh -c "$(wget -O- https://github.com/deluan/zsh-in-docker/releases/download/
     -a 'autoload -U promptinit; promptinit' \
     -a 'prompt pure' \
     -a 'PATH=$PATH:$HOME/.local/bin' \
+    -a 'export HISTFILE=/zsh_history/.zsh_history' \
+    -a 'export TERM=xterm-256color' \
+    -a "ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=161'" \
     && mkdir -p "$HOME/.zsh" \
     && git clone https://github.com/sindresorhus/pure.git "$HOME/.zsh/pure" \
     && echo "source /opt/ros/$ROS_DISTR/setup.zsh" >> /home/$USERNAME/.zshrc
@@ -61,6 +64,9 @@ RUN vim +PluginInstall +qall
 RUN cd /home/$USERNAME/.vim/bundle/YouCompleteMe \
     && python3 install.py --clangd-completer
 USER root
+RUN mkdir /zsh_history \
+    && touch /zsh_history/.zsh_history \
+    && chown -R $USERNAME /zsh_history
 RUN chown -R $USERNAME /home/$USERNAME/
 ADD entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
