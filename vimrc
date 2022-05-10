@@ -58,9 +58,9 @@ autocmd FileType c,cpp vnoremap <leader>f :py3f $HOME/clang-format.py<CR>
 let g:ale_linters={"python": ["pylint"]}
 let g:ale_fixers = ["yapf"]
 let g:ale_open_list=1
-let g:ale_set_quickfix=1
-let g:ale_set_loclist=0
+let g:ale_set_quickfix=0
+let g:ale_set_loclist=1
 " does not seem to work due to os.fspath called by config_initialization of
 " pylint?
 " let g:ale_python_pylint_options='--rcfile $HOME/uuv/ros2/.pylintrc'
-silent! autocmd FileType python nnoremap <leader>f <Plug>(ale_fix)
+silent! autocmd FileType python nnoremap <leader>f :0,$!yapf<CR><C-o>
