@@ -50,6 +50,8 @@ silent! colorscheme PaperColor
 let g:clang_format_fallback_style="Google"
 let g:ycm_autoclose_preview_window_after_completion=1
 let g:ycm_confirm_extra_conf=0
+let g:ycm_always_populate_location_list=1
+let g:ycm_clangd_args=['--header-insertion=never']
 
 autocmd FileType c,cpp nnoremap <leader>f :py3f $HOME/clang-format.py<CR>
 autocmd FileType c,cpp vnoremap <leader>f :py3f $HOME/clang-format.py<CR>
