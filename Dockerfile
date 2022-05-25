@@ -67,6 +67,7 @@ USER root
 RUN mkdir /zsh_history \
     && touch /zsh_history/.zsh_history \
     && chown -R $USERNAME /zsh_history
+ADD cpp.vim /home/$USERNAME/.vim/after/ftplugin/cpp.vim
 RUN chown -R $USERNAME /home/$USERNAME/
 ADD entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
