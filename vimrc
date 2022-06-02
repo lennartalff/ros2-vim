@@ -7,6 +7,8 @@ Plugin 'preservim/nerdtree'
 Plugin 'ycm-core/YouCompleteMe'
 Plugin 'NLKNguyen/papercolor-theme'
 Plugin 'tmsvg/pear-tree'
+Plugin 'vim-airline/vim-airline'
+Plugin 'vim-airline/vim-airline-themes'
 
 call vundle#end()
 filetype plugin indent on
@@ -40,11 +42,14 @@ set showmode
 
 inoremap jj <ESC>
 
-noremap <leader>t :NERDTreeToggle<CR>
+nnoremap <leader>t :NERDTreeToggle<CR>
+nnoremap <leader>n :NERDTreeFocus<CR>
+nnoremap <C-f> :NERDTreeFind<CR>
 
 set t_Co=256
 set background=dark
 silent! colorscheme PaperColor
+let g:airline_theme='papercolor'
 :set colorcolumn=81,121
 
 let g:clang_format_fallback_style="Google"
