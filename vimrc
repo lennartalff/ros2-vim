@@ -9,6 +9,7 @@ Plugin 'NLKNguyen/papercolor-theme'
 Plugin 'tmsvg/pear-tree'
 Plugin 'vim-airline/vim-airline'
 Plugin 'vim-airline/vim-airline-themes'
+Plugin 'aonemd/quietlight.vim'
 
 call vundle#end()
 filetype plugin indent on
@@ -47,8 +48,8 @@ nnoremap <leader>n :NERDTreeFocus<CR>
 nnoremap <C-f> :NERDTreeFind<CR>
 
 set t_Co=256
-set background=dark
-silent! colorscheme PaperColor
+set background=light
+silent! colorscheme quietlight
 let g:airline_theme='papercolor'
 :set colorcolumn=81,121
 
