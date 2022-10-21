@@ -1,5 +1,5 @@
-FROM px4io/px4-dev-ros2-foxy
-ARG ROS_DISTR=foxy
+FROM osrf/ros:humble-desktop-full
+ARG ROS_DISTR=humble
 
 ENV DEBIAN_FRONTEND=noninteractive
 ENV NVIDIA_VISIBLE_DEVICES \
@@ -17,7 +17,6 @@ RUN apt-get update \
     libgl1-mesa-dri \
     libgl1-mesa-glx \
     python3-pip \
-    ros-${ROS_DISTR}-desktop \
     avahi-daemon \
     avahi-utils \
     libnss-mdns \
@@ -49,10 +48,17 @@ RUN sh -c "$(wget -O- https://github.com/deluan/zsh-in-docker/releases/download/
     -a 'fpath+=$HOME/.zsh/pure' \
     -a 'autoload -U promptinit; promptinit' \
     -a 'prompt pure' \
+    -a "export TERM=xterm-256color" \
+    -a "zstyle ':prompt:pure:path' color 075" \
+    -a "zstyle ':prompt:pure:prompt:success' color 214" \
+    -a "zstyle ':prompt:pure:user' color 119" \
+    -a "zstyle ':prompt:pure:host' color 119" \
+    -a "ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=161'" \
     -a 'PATH=$PATH:$HOME/.local/bin' \
     -a 'export HISTFILE=/zsh_history/.zsh_history' \
     -a 'export TERM=xterm-256color' \
-    -a "ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=161'" \
+    -a 'eval "$(register-python-argcomplete3 ros2)"' \
+    -a 'eval "$(register-python-argcomplete3 colcon)"' \
     && mkdir -p "$HOME/.zsh" \
     && git clone https://github.com/sindresorhus/pure.git "$HOME/.zsh/pure" \
     && echo "source /opt/ros/$ROS_DISTR/setup.zsh" >> /home/$USERNAME/.zshrc
