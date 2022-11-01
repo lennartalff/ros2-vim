@@ -16,6 +16,8 @@ RUN apt-get update \
     && apt-get install -y \
     libgl1-mesa-dri \
     libgl1-mesa-glx \
+    mesa-utils \
+    mesa-utils-extra \
     python3-pip \
     avahi-daemon \
     avahi-utils \
