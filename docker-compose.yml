@@ -1,5 +1,6 @@
 services:
   nvidia:
+    container_name: ros2-vim
     extends:
       service: dev
     deploy:
@@ -10,10 +11,13 @@ services:
               count: all
               capabilities: [gpu]
   dev:
+    container_name: ros2-vim
     network_mode: host
     build:
-      context: .
-      dockerfile: ./Dockerfile
+      context: ..
+      dockerfile: ./ros2-vim/Dockerfile
+      ssh:
+        - default
     stdin_open: true
     tty: true
     entrypoint: ["/entrypoint.sh", "byobu"]
@@ -35,6 +39,7 @@ services:
         target: /var/run/avahi-daemon/socket
       - "ros2_zsh_history:/zsh_history"
       - $SSH_AUTH_SOCK:/ssh-agent
+      - "~/.gitconfig:/etc/gitconfig"
 
     environment:
       - DISPLAY=${DISPLAY}

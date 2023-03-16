@@ -10,6 +10,7 @@ Plugin 'tmsvg/pear-tree'
 Plugin 'vim-airline/vim-airline'
 Plugin 'vim-airline/vim-airline-themes'
 Plugin 'aonemd/quietlight.vim'
+Plugin 'octol/vim-cpp-enhanced-highlight'
 
 call vundle#end()
 filetype plugin indent on
@@ -26,6 +27,8 @@ augroup WrapLine
 	autocmd FileType txt setlocal wrap
 	autocmd FileType rst setlocal wrap
 augroup End
+" highlight current line
+set cursorline
 " enable line numbers
 set number relativenumber
 set nu rnu
@@ -49,7 +52,7 @@ nnoremap <C-f> :NERDTreeFind<CR>
 
 set t_Co=256
 set background=light
-silent! colorscheme quietlight
+silent! colorscheme PaperColor
 let g:airline_theme='papercolor'
 :set colorcolumn=81,121
 

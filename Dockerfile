@@ -11,6 +11,12 @@ ARG USER_UID=1000
 ARG USER_GID=$USER_UID
 ENV ROS_DISTR=$ROS_DISTR
 
+RUN mkdir -p /ros2/src
+RUN mkdir -p /ros2_underlay/src
+
+ADD ros2/src /ros2/src
+ADD ros2_underlay/src /ros2_underlay/src
+
 RUN apt-get update \
     && apt-get -y install --no-install-recommends apt-utils dialog 2>&1 \
     && apt-get install -y \
@@ -28,12 +34,16 @@ RUN apt-get update \
     wget \
     byobu \
     xmlstarlet \
+    ros-${ROS_DISTR}-rqt-tf-tree \
+    ros-${ROS_DISTR}-apriltag \
     clang-format \
     && python3 -m pip install yapf \
     rope \
     flake8 \
     pylint \
     jedi \
+    && rosdep install --from-paths /ros2_underlay/src -y --ignore-src \
+#   && rosdep install --from paths /ros2/src -y --ignore-src \
     && groupadd --gid $USER_GID $USERNAME \
     && useradd -s /bin/bash --uid $USER_UID --gid $USER_GID -m $USERNAME \
     && echo $USERNAME ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/$USERNAME\
@@ -59,14 +69,16 @@ RUN sh -c "$(wget -O- https://github.com/deluan/zsh-in-docker/releases/download/
     -a 'PATH=$PATH:$HOME/.local/bin' \
     -a 'export HISTFILE=/zsh_history/.zsh_history' \
     -a 'export TERM=xterm-256color' \
-    -a 'eval "$(register-python-argcomplete3 ros2)"' \
-    -a 'eval "$(register-python-argcomplete3 colcon)"' \
+    -a 'export COLORTERM=truecolor' \
     && mkdir -p "$HOME/.zsh" \
     && git clone https://github.com/sindresorhus/pure.git "$HOME/.zsh/pure" \
     && echo "source /opt/ros/$ROS_DISTR/setup.zsh" >> /home/$USERNAME/.zshrc
 
-ADD vimrc /home/$USERNAME/.vimrc
-ADD ycm_extra_conf.py /home/$USERNAME/.ycm_extra_conf.py
+RUN echo "source /opt/ros/$ROS_DISTR/setup.bash" >> /home/$USERNAME/.bashrc \
+    && echo "source $HOME/uuv/ros2_underlay/install/setup.bash" >> "$HOME/.bashrc"
+
+ADD ros2-vim/vimrc /home/$USERNAME/.vimrc
+ADD ros2-vim/ycm_extra_conf.py /home/$USERNAME/.ycm_extra_conf.py
 RUN git clone https://github.com/VundleVim/Vundle.vim.git /home/$USERNAME/.vim/bundle/Vundle.vim
 RUN vim +PluginInstall +qall
 RUN cd /home/$USERNAME/.vim/bundle/YouCompleteMe \
@@ -75,9 +87,9 @@ USER root
 RUN mkdir /zsh_history \
     && touch /zsh_history/.zsh_history \
     && chown -R $USERNAME /zsh_history
-ADD cpp.vim /home/$USERNAME/.vim/after/ftplugin/cpp.vim
+ADD ros2-vim/cpp.vim /home/$USERNAME/.vim/after/ftplugin/cpp.vim
 RUN chown -R $USERNAME /home/$USERNAME/
-ADD entrypoint.sh /entrypoint.sh
+ADD ros2-vim/entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 RUN chown $USERNAME /entrypoint.sh
 USER ${USERNAME}
