@@ -30,10 +30,10 @@ RUN apt-get update \
     libnss-mdns \
     iputils-ping \
     sudo \
-    vim \
+    neovim \
+    ripgrep \
     wget \
     byobu \
-    xmlstarlet \
     ros-${ROS_DISTR}-rqt-tf-tree \
     ros-${ROS_DISTR}-apriltag \
     clang-format \
@@ -74,15 +74,7 @@ RUN sh -c "$(wget -O- https://github.com/deluan/zsh-in-docker/releases/download/
     && git clone https://github.com/sindresorhus/pure.git "$HOME/.zsh/pure" \
     && echo "source /opt/ros/$ROS_DISTR/setup.zsh" >> /home/$USERNAME/.zshrc
 
-RUN echo "source /opt/ros/$ROS_DISTR/setup.bash" >> /home/$USERNAME/.bashrc \
-    && echo "source $HOME/uuv/ros2_underlay/install/setup.bash" >> "$HOME/.bashrc"
 
-ADD ros2-vim/vimrc /home/$USERNAME/.vimrc
-ADD ros2-vim/ycm_extra_conf.py /home/$USERNAME/.ycm_extra_conf.py
-RUN git clone https://github.com/VundleVim/Vundle.vim.git /home/$USERNAME/.vim/bundle/Vundle.vim
-RUN vim +PluginInstall +qall
-RUN cd /home/$USERNAME/.vim/bundle/YouCompleteMe \
-    && python3 install.py --clangd-completer
 USER root
 RUN mkdir /zsh_history \
     && touch /zsh_history/.zsh_history \
