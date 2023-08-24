@@ -20,7 +20,7 @@ services:
         - default
     stdin_open: true
     tty: true
-    entrypoint: ["/entrypoint.sh", "byobu"]
+    entrypoint: ["/entrypoint.sh", "zsh"]
     working_dir: /home/ros-user/uuv/ros2
     devices:
       - "/dev/dri:/dev/dri"
@@ -47,6 +47,8 @@ services:
       - SHELL=/usr/bin/zsh
       - ROS_WORKSPACE=/home/ros-user/uuv/ros2
       - SSH_AUTH_SOCK=/ssh-agent
+      - TERM=xterm-256color
+      - COLORTERM=24bit
 
 volumes:
   ros2_zsh_history:
