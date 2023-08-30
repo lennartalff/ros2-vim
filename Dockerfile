@@ -90,6 +90,7 @@ RUN chmod +x /entrypoint.sh
 RUN chown $USERNAME /entrypoint.sh
 USER ${USERNAME}
 RUN nvim --headless "+Lazy! sync" +qa
+RUN nvim --headless +"MasonInstall lua-language-server clangd python-lsp-server yaml-language-server" +q
 WORKDIR /home/$USERNAME
 # Switch back to dialog for any ad-hoc use of apt-get
 ENV DEBIAN_FRONTEND=dialog
