@@ -1,5 +1,5 @@
-FROM osrf/ros:humble-desktop-full
-ARG ROS_DISTR=humble
+FROM osrf/ros:iron-desktop-full
+ARG ROS_DISTR=iron
 
 ENV DEBIAN_FRONTEND=noninteractive
 ENV NVIDIA_VISIBLE_DEVICES \
@@ -11,12 +11,6 @@ ARG USER_UID=1000
 ARG USER_GID=$USER_UID
 ENV ROS_DISTR=$ROS_DISTR
 
-RUN mkdir -p /ros2/src
-RUN mkdir -p /ros2_underlay/src
-
-ADD ros2/src /ros2/src
-ADD ros2_underlay/src /ros2_underlay/src
-
 RUN apt-get update \
     && apt-get -y install --no-install-recommends apt-utils dialog 2>&1 \
     && apt-get install -y \
@@ -25,25 +19,39 @@ RUN apt-get update \
     mesa-utils \
     mesa-utils-extra \
     python3-pip \
+    python3-venv \
     avahi-daemon \
     avahi-utils \
     libnss-mdns \
     iputils-ping \
     sudo \
-    neovim \
     ripgrep \
     wget \
     byobu \
     ros-${ROS_DISTR}-rqt-tf-tree \
     ros-${ROS_DISTR}-apriltag \
+    ros-${ROS_DISTR}-plotjuggler-ros \
     clang-format \
-    && python3 -m pip install yapf \
-    rope \
-    flake8 \
-    pylint \
-    jedi \
-    && rosdep install --from-paths /ros2_underlay/src -y --ignore-src \
+    xclip \
+# neovim build depends \
+    ninja-build \
+    gettext \
+    cmake \
+    unzip \
+    curl \
+# end neovim build depends \
+#   && rosdep install --from-paths /ros2_underlay/src -y --ignore-src \
 #   && rosdep install --from paths /ros2/src -y --ignore-src \
+    && mkdir -p /etc/apt/keyrings \
+    && curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg \
+    && NODE_MAJOR=20 \
+    && echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_$NODE_MAJOR.x nodistro main" | tee /etc/apt/sources.list.d/nodesource.list \
+    && apt update \
+    && apt-get remove nodejs \
+    && apt-get install nodejs \
+    && git clone https://github.com/neovim/neovim.git \
+    && cd neovim && git checkout stable && make CMAKE_BUILD_TYPE=RelWithDebInfo \
+    && sudo make install \
     && groupadd --gid $USER_GID $USERNAME \
     && useradd -s /bin/bash --uid $USER_UID --gid $USER_GID -m $USERNAME \
     && echo $USERNAME ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/$USERNAME\
@@ -79,14 +87,18 @@ USER root
 RUN mkdir /zsh_history \
     && touch /zsh_history/.zsh_history \
     && chown -R $USERNAME /zsh_history
-ADD ros2-vim/cpp.vim /home/$USERNAME/.vim/after/ftplugin/cpp.vim
+ADD ros2-vim/nvim /home/$USERNAME/.config/nvim
 RUN chown -R $USERNAME /home/$USERNAME/
+USER ${USERNAME}
+RUN nvim --headless "+Lazy! sync" +qa
+RUN nvim --headless +"MasonInstall lua-language-server clangd python-lsp-server yaml-language-server" +q
+WORKDIR /home/$USERNAME
+
+USER root
 ADD ros2-vim/entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 RUN chown $USERNAME /entrypoint.sh
 USER ${USERNAME}
-WORKDIR /home/$USERNAME
-RUN wget https://raw.githubusercontent.com/llvm/llvm-project/main/clang/tools/clang-format/clang-format.py
 # Switch back to dialog for any ad-hoc use of apt-get
 ENV DEBIAN_FRONTEND=dialog
 CMD [ "/usr/bin/zsh"]

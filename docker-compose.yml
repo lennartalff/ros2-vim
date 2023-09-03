@@ -20,7 +20,7 @@ services:
         - default
     stdin_open: true
     tty: true
-    entrypoint: ["/entrypoint.sh", "byobu"]
+    entrypoint: ["/entrypoint.sh", "zsh"]
     working_dir: /home/ros-user/uuv/ros2
     devices:
       - "/dev/dri:/dev/dri"
@@ -37,7 +37,11 @@ services:
       - type: bind
         source: /var/run/avahi-daemon/socket
         target: /var/run/avahi-daemon/socket
+      - type: bind
+        source: ${HOME}/Documents/ros2-vim/nvim
+        target: /home/ros-user/.config/nvim
       - "ros2_zsh_history:/zsh_history"
+      - nvim_data:/home/ros-user/.local/share/nvim
       - $SSH_AUTH_SOCK:/ssh-agent
       - "~/.gitconfig:/etc/gitconfig"
 
@@ -47,6 +51,10 @@ services:
       - SHELL=/usr/bin/zsh
       - ROS_WORKSPACE=/home/ros-user/uuv/ros2
       - SSH_AUTH_SOCK=/ssh-agent
+      - TERM=xterm-256color
+      - COLORTERM=24bit
+      - ROS_DOMAIN_ID=29
 
 volumes:
   ros2_zsh_history:
+  nvim_data:
