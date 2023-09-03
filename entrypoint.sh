@@ -9,6 +9,7 @@ echo "alias build_underlay=\"env -i HOME=\$HOME USER=\$USER TERM=xterm-256color 
 
 echo 'source $HOME/uuv/ros2_underlay/install/setup.zsh' >> ~/.zshrc
 echo 'source $HOME/uuv/ros2/install/local_setup.zsh' >> ~/.zshrc
+echo 'export RCUTILS_COLORIZED_OUTPUT=1' >> ~/.zshrc
 echo 'eval "$(register-python-argcomplete3 ros2)"' >> ~/.zshrc
 echo 'eval "$(register-python-argcomplete3 colcon)"' >> ~/.zshrc
 

@@ -9,7 +9,16 @@ require('mason-lspconfig').setup {
         'lua_ls', 'clangd', 'pylsp', 'yamlls'
     }
 }
-local lsp = require('lsp-zero').preset({})
+local lsp = require('lsp-zero').preset({
+    manage_nvim_cmp = {
+        set_sources = 'lsp',
+        set_basic_mappings = true,
+        set_extra_mappings = false,
+        use_luasnip = true,
+        set_format = true,
+        documentation_window = true,
+    }
+})
 
 lsp.on_attach(function(client, bufnr)
     lsp.default_keymaps({ buffer = bufnr })
@@ -32,6 +41,7 @@ cmp.setup({
         ['<C-space>'] = cmp.mapping.complete(),
         ['<C-j>'] = cmp.mapping.scroll_docs(1),
         ['<C-k>'] = cmp.mapping.scroll_docs(-1),
+        ['<CR>'] = cmp.mapping.confirm({ select = false }),
     },
     window = {
         completion = cmp.config.window.bordered(),
