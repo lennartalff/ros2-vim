@@ -1,5 +1,5 @@
-FROM osrf/ros:iron-desktop-full
-ARG ROS_DISTR=iron
+FROM osrf/ros:humble-desktop-full
+ARG ROS_DISTR=humble
 
 ENV DEBIAN_FRONTEND=noninteractive
 ENV NVIDIA_VISIBLE_DEVICES \
